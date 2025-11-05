@@ -2,7 +2,7 @@
 package rag
 
 import (
-	"awesomeProject2/internal/models"
+	"sql_generator/internal/models"
 )
 
 // VectorStore 定义向量存储接口

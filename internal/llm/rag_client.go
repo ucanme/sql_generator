@@ -3,9 +3,9 @@ package llm
 import (
 	"fmt"
 
-	"awesomeProject2/internal/config"
-	"awesomeProject2/internal/models"
-	"awesomeProject2/internal/rag"
+	"sql_generator/internal/config"
+	"sql_generator/internal/models"
+	"sql_generator/internal/rag"
 )
 
 // RAGEnhancedClient 实现结合RAG的LLM客户端

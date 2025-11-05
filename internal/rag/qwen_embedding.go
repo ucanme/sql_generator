@@ -1,9 +1,9 @@
 package rag
 
 import (
-	"awesomeProject2/internal/models"
 	"context"
 	"fmt"
+	"sql_generator/internal/models"
 
 	openai "github.com/sashabaranov/go-openai"
 )

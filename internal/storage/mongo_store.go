@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"awesomeProject2/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"sql_generator/internal/models"
 )
 
 // Store defines the interface for data storage
@@ -29,11 +29,11 @@ type Store interface {
 
 // MongoStore implements Store interface with MongoDB
 type MongoStore struct {
-	client   *mongo.Client
-	db       *mongo.Database
-	tables   *mongo.Collection
-	queries  *mongo.Collection
-	context  context.Context
+	client  *mongo.Client
+	db      *mongo.Database
+	tables  *mongo.Collection
+	queries *mongo.Collection
+	context context.Context
 }
 
 // NewMongoStore creates a new MongoDB storage
@@ -112,7 +112,7 @@ func (s *MongoStore) SearchTables(keyword string, limit, offset int) ([]*models.
 	if limit <= 0 {
 		limit = 10
 	}
-	
+
 	if limit > 100 {
 		limit = 100 // Cap at 100 results
 	}
@@ -143,7 +143,7 @@ func (s *MongoStore) ListTables(limit, offset int) ([]*models.Table, error) {
 	if limit <= 0 {
 		limit = 10
 	}
-	
+
 	if limit > 100 {
 		limit = 100 // Cap at 100 results
 	}
@@ -170,7 +170,7 @@ func (s *MongoStore) ListTables(limit, offset int) ([]*models.Table, error) {
 // UpdateTable updates a table by name
 func (s *MongoStore) UpdateTable(name string, table *models.Table) error {
 	table.UpdatedAt = time.Now()
-	
+
 	result, err := s.tables.UpdateOne(
 		s.context,
 		bson.M{"name": name},
@@ -179,11 +179,11 @@ func (s *MongoStore) UpdateTable(name string, table *models.Table) error {
 	if err != nil {
 		return fmt.Errorf("failed to update table: %w", err)
 	}
-	
+
 	if result.MatchedCount == 0 {
 		return fmt.Errorf("table not found: %s", name)
 	}
-	
+
 	return nil
 }
 
@@ -193,18 +193,18 @@ func (s *MongoStore) DeleteTable(name string) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete table: %w", err)
 	}
-	
+
 	if result.DeletedCount == 0 {
 		return fmt.Errorf("table not found: %s", name)
 	}
-	
+
 	return nil
 }
 
 // CreateQuery saves a generated query
 func (s *MongoStore) CreateQuery(query *models.Query) error {
 	query.CreatedAt = time.Now()
-	
+
 	_, err := s.queries.InsertOne(s.context, query)
 	if err != nil {
 		return fmt.Errorf("failed to insert query: %w", err)
@@ -230,7 +230,7 @@ func (s *MongoStore) ListQueries(limit, offset int) ([]*models.Query, error) {
 	if limit <= 0 {
 		limit = 10
 	}
-	
+
 	if limit > 100 {
 		limit = 100 // Cap at 100 results
 	}

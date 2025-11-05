@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"awesomeProject2/internal/models"
+	"sql_generator/internal/models"
 )
 
 // HFEmbeddingService implements Hugging Face embedding service
@@ -68,7 +68,7 @@ func NewHFEmbeddingServiceWithConfig(apiKey, model, endpoint string) EmbeddingSe
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	}
-	
+
 	return &HFEmbeddingService{
 		apiKey:  apiKey,
 		model:   model,
@@ -113,7 +113,7 @@ func (h *HFEmbeddingService) GenerateEmbedding(text string) ([]float32, error) {
 			"use_cache":      true,
 		},
 	}
-	
+
 	jsonData, err := json.Marshal(reqBody)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %w", err)
@@ -121,7 +121,7 @@ func (h *HFEmbeddingService) GenerateEmbedding(text string) ([]float32, error) {
 
 	// Create HTTP request with properly constructed URL
 	url := h.baseURL + strings.TrimLeft(h.model, "/")
-	
+
 	// Retry logic for handling timeouts and temporary issues
 	var lastErr error
 	for attempt := 0; attempt < 3; attempt++ {
@@ -129,10 +129,10 @@ func (h *HFEmbeddingService) GenerateEmbedding(text string) ([]float32, error) {
 			// Exponential backoff: 1s, 2s, 4s
 			time.Sleep(time.Duration(1<<uint(attempt)) * time.Second)
 		}
-		
+
 		// Create context with timeout
 		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-		
+
 		req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonData))
 		if err != nil {
 			cancel()
@@ -158,12 +158,12 @@ func (h *HFEmbeddingService) GenerateEmbedding(text string) ([]float32, error) {
 			lastErr = fmt.Errorf("failed to send request to %s: %w", url, err)
 			continue
 		}
-		
+
 		// Read response
 		body, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
 		cancel()
-		
+
 		if err != nil {
 			lastErr = fmt.Errorf("failed to read response: %w", err)
 			continue
@@ -175,10 +175,10 @@ func (h *HFEmbeddingService) GenerateEmbedding(text string) ([]float32, error) {
 			var errorResp HFEmbeddingErrorResponse
 			if err := json.Unmarshal(body, &errorResp); err == nil && errorResp.Error != "" {
 				// If it's a model loading error, we should retry
-				if strings.Contains(errorResp.Error, "currently loading") || 
-				   strings.Contains(errorResp.Error, "timeout") ||
-				   resp.StatusCode == http.StatusInternalServerError ||
-				   resp.StatusCode == http.StatusTooManyRequests {
+				if strings.Contains(errorResp.Error, "currently loading") ||
+					strings.Contains(errorResp.Error, "timeout") ||
+					resp.StatusCode == http.StatusInternalServerError ||
+					resp.StatusCode == http.StatusTooManyRequests {
 					lastErr = fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, errorResp.Error)
 					continue
 				}
@@ -191,21 +191,21 @@ func (h *HFEmbeddingService) GenerateEmbedding(text string) ([]float32, error) {
 		// Parse response
 		var singleResp HFEmbeddingSingleResponse
 		var multiResp HFEmbeddingMultiResponse
-		
+
 		// Try to parse as single response
 		if err := json.Unmarshal(body, &singleResp); err == nil && len(singleResp.Embedding) > 0 {
 			return singleResp.Embedding, nil
 		}
-		
+
 		// Try to parse as multiple response
 		if err := json.Unmarshal(body, &multiResp); err == nil && len(multiResp) > 0 {
 			return multiResp[0].Embedding, nil
 		}
-		
+
 		lastErr = fmt.Errorf("failed to parse response: %s", string(body))
 		continue
 	}
-	
+
 	return nil, fmt.Errorf("failed to generate embedding after 3 attempts: %w", lastErr)
 }
 

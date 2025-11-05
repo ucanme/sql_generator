@@ -406,8 +406,3 @@ The system enhances query accuracy through RAG (Retrieval-Augmented Generation) 
 - 模块化设计便于功能扩展
 - 支持水平扩展以处理更大规模数据
 
----
-
-## 中文版本 / Chinese Version
-
-请参阅 [README_zh.md](README_zh.md) 获取完整的中文文档。

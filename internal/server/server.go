@@ -5,13 +5,12 @@ import (
 	"net/http"
 	"time"
 
-	"awesomeProject2/internal/config"
-	"awesomeProject2/internal/handlers"
-	"awesomeProject2/internal/storage"
-	"awesomeProject2/internal/llm"
-	"awesomeProject2/internal/rag"
-
 	"github.com/gin-gonic/gin"
+	"sql_generator/internal/config"
+	"sql_generator/internal/handlers"
+	"sql_generator/internal/llm"
+	"sql_generator/internal/rag"
+	"sql_generator/internal/storage"
 )
 
 // New creates a new HTTP server with configured routes
@@ -100,7 +99,7 @@ func loadAndIndexTables(store storage.Store, embeddingSvc rag.EmbeddingService, 
 	// Index each table for RAG
 	for _, table := range tables {
 		fmt.Printf("Indexing table: %s (%s)\n", table.Name, table.Description)
-		
+
 		// Generate embedding for the table
 		vector, err := embeddingSvc.GenerateTableEmbedding(table)
 		if err != nil {
@@ -114,7 +113,7 @@ func loadAndIndexTables(store storage.Store, embeddingSvc rag.EmbeddingService, 
 			fmt.Printf("Warning: failed to index table %s: %v\n", table.Name, err)
 			continue
 		}
-		
+
 		fmt.Printf("Successfully indexed table: %s\n", table.Name)
 	}
 

@@ -2,9 +2,9 @@ package rag
 
 import (
 	"fmt"
-	
-	"awesomeProject2/internal/models"
-	"awesomeProject2/internal/storage"
+
+	"sql_generator/internal/models"
+	"sql_generator/internal/storage"
 )
 
 // PineconeVectorStore 实现基于Pinecone的向量存储

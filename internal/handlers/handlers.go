@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"awesomeProject2/internal/llm"
-	"awesomeProject2/internal/models"
-	"awesomeProject2/internal/storage"
+	"sql_generator/internal/llm"
+	"sql_generator/internal/models"
+	"sql_generator/internal/storage"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

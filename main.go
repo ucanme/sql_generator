@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"awesomeProject2/internal/config"
-	"awesomeProject2/internal/server"
+	"sql_generator/internal/config"
+	"sql_generator/internal/server"
 )
 
 func main() {

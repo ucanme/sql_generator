@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"awesomeProject2/internal/models"
 	_ "github.com/go-sql-driver/mysql"
+	"sql_generator/internal/models"
 )
 
 // MySQLStore implements Store interface with MySQL

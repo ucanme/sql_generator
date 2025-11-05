@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"awesomeProject2/internal/config"
-	"awesomeProject2/internal/models"
+	"sql_generator/internal/config"
+	"sql_generator/internal/models"
 
 	"github.com/sashabaranov/go-openai"
 )

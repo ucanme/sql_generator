@@ -1,7 +1,7 @@
 package llm
 
 import (
-	"awesomeProject2/internal/models"
+	"sql_generator/internal/models"
 )
 
 // Client defines the interface for LLM clients

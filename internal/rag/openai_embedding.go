@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"awesomeProject2/internal/models"
+	"sql_generator/internal/models"
 )
 
 // OpenAIEmbeddingService 实现基于OpenAI的嵌入服务

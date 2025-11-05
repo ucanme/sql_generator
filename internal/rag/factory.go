@@ -1,8 +1,8 @@
 package rag
 
 import (
-	"awesomeProject2/internal/config"
 	"fmt"
+	"sql_generator/internal/config"
 )
 
 // NewEmbeddingService 根据配置创建嵌入服务
@@ -10,11 +10,6 @@ func NewEmbeddingService(config config.EmbeddingConfig) (EmbeddingService, error
 	switch config.Provider {
 	case "openai":
 		return NewOpenAIEmbeddingService(config.APIKey, config.Model), nil
-	case "deepseek-chat":
-		// 由于DeepSeek可能不提供标准的嵌入API，我们使用一个兼容的替代方案
-		// 首先尝试使用OpenAI SDK实现的DeepSeek嵌入服务
-		// 如果失败，会自动降级到本地嵌入服务
-		return NewDeepSeekOpenAIEmbeddingService(config.APIKey, config.Model), nil
 	case "qwen":
 		// 使用阿里云千问作为嵌入服务提供者
 		// 如果配置了专门的千问模型，则使用它，否则使用通用模型配置
